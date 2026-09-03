@@ -14,14 +14,17 @@
             font-style: normal;
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        html { scroll-behavior:smooth; scroll-snap-type:y mandatory; }
+        html { scroll-behavior:smooth; scroll-snap-type:y mandatory; cursor: url('cursor.png') 16 16, auto; }
+        *, *::before, *::after { cursor: url('cursor.png') 16 16, auto !important; }
         body {
             font-family: 'Inter', sans-serif;
             background: #0a0a0a;
             color: #fff;
             overflow-x: hidden;
             letter-spacing: 0.5px;
+            cursor: url('cursor.png') 16 16, auto;
         }
+        a, button { cursor: url('cursor.png') 16 16, pointer !important; }
         .section {
             min-height:100vh;
             scroll-snap-align:start;
@@ -68,8 +71,8 @@
             box-shadow: 0 0 12px rgba(42,174,166,0.6);
             transform: scale(1.4);
         }
-        /* Profile - distinct left aligned with gradient border square */
-        .profile-section { flex-direction: column; gap: 22px; }
+        /* Profile - distinct with music */
+        .profile-section { flex-direction: column; gap: 18px; min-height:100vh; height:auto; padding:70px 20px 90px 20px; justify-content:flex-start; }
         .pfp-wrap {
             position: relative;
             width: 200px; height: 200px;
@@ -298,7 +301,6 @@
         <button class="nav-dot active" onclick="scrollToSection(0)"></button>
         <button class="nav-dot" onclick="scrollToSection(1)"></button>
         <button class="nav-dot" onclick="scrollToSection(2)"></button>
-        <button class="nav-dot" onclick="scrollToSection(3)"></button>
     </nav>
 
     <!-- Profile -->
@@ -316,15 +318,35 @@
             <a class="social-btn" href="https://discord.com/users/_inningz_" target="_blank" title="Discord" onclick="navigator.clipboard.writeText('_inningz_'); alert('Discord: _inningz_ copied'); return false;">
                 <svg viewBox="0 0 24 24"><path d="M20.3 4.1a19.4 19.4 0 0 0-4.8-1.5 13.7 13.7 0 0 0-.6 1.3 18.2 18.2 0 0 0-5.4 0 13.7 13.7 0 0 0-.6-1.3 19.5 19.5 0 0 0-4.8 1.5 20.2 20.2 0 0 0-2.8 13.7 19.5 19.5 0 0 0 5.9 3 13.9 13.9 0 0 0 1.2-1.9 12.6 12.6 0 0 1-1.9-.9l.4-.3a12.2 12.2 0 0 0 10.2 0l.4.3a12.6 12.6 0 0 1-1.9.9 13.9 13.9 0 0 0 1.2 1.9 19.5 19.5 0 0 0 5.9-3A20.2 20.2 0 0 0 20.3 4.1zM8.3 15.1c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2zm7.4 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2z"/></svg>
             </a>
+            <a class="social-btn" href="https://discord.gg/ujMcZ7PNv" target="_blank" title="Discord Invite">
+                <svg viewBox="0 0 24 24"><path d="M12 2.2a9.8 9.8 0 0 0-3.2.5 9.8 9.8 0 0 1 3.2 7.8 9.8 9.8 0 0 1-3.2 7.8 9.8 9.8 0 0 0 3.2.5c5.4 0 9.8-4.4 9.8-9.8S17.4 2.2 12 2.2zm0 14.6c-2.6 0-4.8-2.1-4.8-4.8S9.4 7.2 12 7.2s4.8 2.1 4.8 4.8-2.2 4.8-4.8 4.8z"/><circle cx="12" cy="12" r="2.2"/></svg>
+            </a>
+        </div>
+        <div class="music-card reveal" style="margin-top:18px; width: 420px; max-width:90vw; padding:28px;">
+            <div class="music-header">
+                <div class="music-art"><img id="mArt" src="lex-amarni-the-kill.jpg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:14px;"></div>
+                <div style="flex:1;min-width:0;">
+                    <div class="music-subtitle">Now Playing</div>
+                    <div class="music-title" id="mTitle">the kill</div>
+                    <div class="music-artist" id="mArtist">lex amarni</div>
+                </div>
+            </div>
+            <div class="progress-bar2" id="mBar"><div class="progress-fill2" id="mFill"></div></div>
+            <div class="time-row"><span id="mCur">0:00</span><span id="mDur">0:00</span></div>
+            <div class="music-controls">
+                <button class="m-btn" id="mPrev" title="Prev"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 6h2v12H6zM9.5 12L18 6v12L9.5 12z"/></svg></button>
+                <button class="m-play" id="mPlay" title="Play"><svg id="mPlayIcon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5.2v13.6L19 12 8 5.2z"/></svg></button>
+                <button class="m-btn" id="mNext" title="Next"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M16 6h2v12h-2zM14.5 12L6 6v12L14.5 12z"/></svg></button>
+                <div class="vol-wrap"><button class="vol-icon2" id="mVolIcon" title="Volume"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm9.5 3c0-1.5-1-2.8-2.5-3.2v6.4c1.5-.4 2.5-1.7 2.5-3.2z"/></svg></button><input type="range" class="vol-slider2" id="mVol" min="0" max="100" value="75"></div>
+            </div>
         </div>
         <div class="scroll-hint"><span>scroll</span><div class="scroll-arrow"></div></div>
     </section>
-
-    <!-- Skills -->
+<!-- Skills (page 3) -->
     <section class="section skills-section" id="sec1">
         <div class="skills-card reveal">
             <div class="view-counter-skills"><span class="eye">👁</span> <span id="viewCount">0</span></div>
-            <div class="skills-heading">Skills <span style="font-family: Inter, sans-serif; font-weight: 800;">&</span> Stack</div>
+            <div class="skills-heading">skills and stacks</div>
             <div class="skills-sub">I love gaming • 13</div>
             <div class="skills-grid">
                 <div class="skill-category">
@@ -342,13 +364,6 @@
                     </div>
                 </div>
                 <div class="skill-category">
-                    <div class="skill-label">Music</div>
-                    <div class="skill-tags">
-                        <span class="skill-tag">music</span>
-                        <span class="skill-tag">beats</span>
-                    </div>
-                </div>
-                <div class="skill-category">
                     <div class="skill-label">Voice</div>
                     <div class="skill-tags">
                         <span class="skill-tag">vcing</span>
@@ -359,30 +374,8 @@
         </div>
     </section>
 
-    <!-- Music -->
-    <section class="section music-section" id="sec2">
-        <div class="music-card reveal">
-            <div class="music-header">
-                <div class="music-art"><img id="mArt" src="lex-amarni-the-kill.jpg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:14px;"></div>
-                <div style="flex:1;min-width:0;">
-                    <div class="music-subtitle">Now Playing</div>
-                    <div class="music-title" id="mTitle">the kill</div>
-                    <div class="music-artist" id="mArtist">lex amarni</div>
-                </div>
-            </div>
-            <div class="progress-bar2" id="mBar"><div class="progress-fill2" id="mFill"></div></div>
-            <div class="time-row"><span id="mCur">0:00</span><span id="mDur">0:00</span></div>
-            <div class="music-controls">
-                <button class="m-btn" id="mPrev">⏮</button>
-                <button class="m-play" id="mPlay">▶</button>
-                <button class="m-btn" id="mNext">⏭</button>
-                <div class="vol-wrap"><button class="vol-icon2" id="mVolIcon">🔊</button><input type="range" class="vol-slider2" id="mVol" min="0" max="100" value="75"></div>
-            </div>
-        </div>
-    </section>
-
     <!-- Guestbook -->
-    <section class="section guest-section" id="sec3">
+    <section class="section guest-section" id="sec2">
         <div class="guest-card reveal">
             <div class="guest-heading">guestbook</div>
             <div class="guest-sub">leave a note — 30 chars max</div>
@@ -413,7 +406,7 @@
         let cur=0; const audio=new Audio(tracks[0].src); audio.loop=true; audio.volume=0.75; audio.muted=true; audio.autoplay=true;
         const mArt=document.getElementById('mArt'), mTitle=document.getElementById('mTitle'), mArtist=document.getElementById('mArtist'), mPlay=document.getElementById('mPlay'), mFill=document.getElementById('mFill'), mBar=document.getElementById('mBar'), mCur=document.getElementById('mCur'), mDur=document.getElementById('mDur'), mVol=document.getElementById('mVol');
         let isPlaying=false, hasUnlocked=false, userPaused=false;
-        function updPlay(){ mPlay.textContent=isPlaying?'⏸':'▶'; }
+        function updPlay(){ const icon=document.getElementById('mPlayIcon'); if(!icon) return; icon.innerHTML=isPlaying?'<path d="M6 19h4V5H6zm8-14v14h4V5z"/>':'<path d="M8 5.2v13.6L19 12 8 5.2z"/>'; }
         audio.addEventListener('play',()=>{isPlaying=true; updPlay();});
         audio.addEventListener('pause',()=>{if(!audio.ended){isPlaying=false; updPlay();}});
         function tryMuted(){ audio.muted=true; audio.play().then(()=>{isPlaying=true;}).catch(()=>{}); }
@@ -439,7 +432,7 @@
         audio.addEventListener('timeupdate',()=>{ if(audio.duration){ mFill.style.width=(audio.currentTime/audio.duration*100)+'%'; mCur.textContent=fmt(audio.currentTime); }});
         audio.addEventListener('loadedmetadata',()=>{ mDur.textContent=fmt(audio.duration); });
         mBar.onclick=(e)=>{ if(audio.duration){ const r=mBar.getBoundingClientRect(); audio.currentTime=(e.clientX-r.left)/r.width*audio.duration; } };
-        mVol.oninput=()=>{ const v=parseInt(mVol.value); const cur=Math.max(0,Math.min(1,(v/100)**1.5)); audio.volume=cur; document.getElementById('mVolIcon').textContent=v==0?'🔇':v<50?'🔉':'🔊'; };
+        mVol.oninput=()=>{ const v=parseInt(mVol.value); const cur=Math.max(0,Math.min(1,(v/100)**1.5)); audio.volume=cur; };
 
         // Views 1 per IP for Inningz (project: niningz)
         const VIEW_URL='https://niningz-default-rtdb.firebaseio.com/views.json';
